@@ -36,6 +36,12 @@ The following example shows a search input (uses form components) that show rela
 </div>
 ```
 
+Add `autocomplete` property to `app` object in `assets/js/app.js`.
+
+```js
+autocomplete: null
+```
+
 Place the following code inside `assets/js/app.js` to initialize autocomplete for input with `search` id.
 
 ```js
