@@ -26,7 +26,7 @@ var Autocomplete = function(options) {
 		delay: 300,
 		maxSuggestions: null,
 		listClasses: ['autocomplete'],
-		itemClasses: ['autocomplete-item'],
+		itemClasses: [],
 		initCallback: null,
 		openCallback: null,
 		closeCallback: null,

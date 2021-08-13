@@ -95,7 +95,7 @@ Option| Type | Default | Required | Description
 `delay` | Number | 300 | No | Number of milliseconds between a keystroke occurs and search is performed (`getSuggestions` is called).
 `maxSuggestions` | Number | null | No | Maximum number of appended suggestions.
 `listClasses` | Array | ['autocomplete'] | No | Array of classes added to autocomplete on initialization.
-`itemClasses` | Array | ['autocomplete-item'] | No | Array of classes added to a suggestion item when it is appended to autocomplete.
+`itemClasses` | Array | [] | No | Array of classes added to a suggestion item when it is appended to autocomplete.
 `initCallback` | Function | null | No | Callback function after autocomplete is initialized.
 `openCallback` | Function | null | No | Callback function after autocomplete is opened.
 `closeCallback` | Function | null | No | Callback function after autocomplete is closed.

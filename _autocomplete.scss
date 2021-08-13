@@ -18,7 +18,7 @@ ul.autocomplete {
 	width: 100%;
 	z-index: $autocomplete-z-index;
 
-	> li.autocomplete-item {
+	> li {
 		cursor: default;
 		display: block;
 		max-width: 100%;
