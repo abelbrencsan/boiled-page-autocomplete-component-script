@@ -152,11 +152,3 @@ Parameter | Description
 
 `destroy()` - Destroy autocomplete. It removes all related attributes and events, autocomplete from the DOM.
 
-##### Check autocomplete is initialized or not
-
-`getIsInitialized()` - Check autocomplete is initialized or not. It returns `true` when it is already initialized, `false` if not.
-
-##### Check autocomplete is opened or not
-
-`getIsOpened()` - Check autocomplete is opened or not. It returns `true` when it is already opened, `false` if not.
-

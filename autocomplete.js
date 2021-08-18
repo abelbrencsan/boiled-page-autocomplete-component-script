@@ -1,6 +1,6 @@
 /**
- * Autocomplete - v1.0.0
- * Copyright 2020 Abel Brencsan
+ * Autocomplete - v1.1.0
+ * Copyright 2021 Abel Brencsan
  * Released under the MIT License
  */
 
@@ -406,28 +406,12 @@ Autocomplete.prototype = function () {
 			this.isInitialized = false;
 			this.list.parentNode.removeChild(this.list);
 			if (this.destroyCallback) this.destroyCallback.call(this);
-		},
-
-		/**
-		 * Get value of "isInitialized" to be able to check autocomplete is initialized or not. (public)
-		 */
-		getIsInitialized: function() {
-			return this.isInitialized;
-		},
-
-		/**
-		 * Get value of "isOpened" to be able to check autocomplete is opened or not. (public)
-		 */
-		getIsOpened: function() {
-			return this.isOpened;
 		}
 	};
 
 	return {
 		init: autocomplete.init,
-		destroy: autocomplete.destroy,
-		getIsInitialized: autocomplete.getIsInitialized,
-		getIsOpened: autocomplete.getIsOpened
+		destroy: autocomplete.destroy
 	};
 
 }();
