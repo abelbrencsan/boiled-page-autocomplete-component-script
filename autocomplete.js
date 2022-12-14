@@ -355,15 +355,15 @@ Autocomplete.prototype = function () {
 					break;
 				case 'keydown':
 					if (event.target == this.input) {
-						if (event.keyCode == 38) {
+						if (event.key == 'ArrowUp') {
 							event.preventDefault();
 							autocomplete.highlightPrevItem.call(this);
 						}
-						if (event.keyCode == 40) {
+						if (event.key == 'ArrowDown') {
 							event.preventDefault();
 							autocomplete.highlightNextItem.call(this);
 						}
-						if (event.keyCode == 13) {
+						if (event.key == 'Enter') {
 							event.preventDefault();
 							autocomplete.selectHighlightedItem.call(this);
 						}
@@ -371,11 +371,11 @@ Autocomplete.prototype = function () {
 					break;
 				case 'keyup':
 					if (event.target == this.input) {
-						if (event.keyCode == 27) {
+						if (event.key == 'Escape') {
 							autocomplete.removeHighlight.call(this);
 							autocomplete.closeList.call(this);
 						}
-						else if (event.keyCode != 16 && event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
+						else if (event.key != 'Shift' && event.key != 'Tab' && event.key != 'ArrowLeft' && event.key != 'ArrowUp' && event.key != 'ArrowRight' && event.key != 'ArrowDown') {
 							autocomplete.setSuggestions.call(this);
 						}
 					}
