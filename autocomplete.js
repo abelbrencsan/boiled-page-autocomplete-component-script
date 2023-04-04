@@ -32,6 +32,7 @@ var Autocomplete = function(options) {
 		closeCallback: null,
 		selectCallback: null,
 		highlightCallback: null,
+		submitCallback: null,
 		destroyCallback: null,
 		isOpenedClass: 'is-opened',
 		hasAutocompleteClass: 'has-autocomplete',
@@ -365,7 +366,12 @@ Autocomplete.prototype = function () {
 						}
 						if (event.key == 'Enter') {
 							event.preventDefault();
-							autocomplete.selectHighlightedItem.call(this);
+							if (this.highlightedSuggestionIndex !== null) {
+								autocomplete.selectHighlightedItem.call(this);
+							}
+							else {
+								if (this.submitCallback) this.submitCallback.call(this);
+							}
 						}
 					}
 					break;

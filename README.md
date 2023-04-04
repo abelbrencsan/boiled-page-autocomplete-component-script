@@ -106,6 +106,7 @@ Option| Type | Default | Required | Description
 `openCallback` | Function | null | No | Callback function after autocomplete is opened.
 `closeCallback` | Function | null | No | Callback function after autocomplete is closed.
 `selectCallback` | Function | null | No | Callback function after a suggestion item is selected.
+`submitCallback` | Function | null | No | Callback function after enter is pressed.
 `highlightCallback` | Function | null | No | Callback function after a suggestion item is highlighted.
 `destroyCallback` | Function | null | No | Callback function after autocomplete is destroyed.
 `isOpenedClass` | String | 'is-opened' | No | Class added to autocomplete when it is opened.
