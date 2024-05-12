@@ -1,22 +1,31 @@
 /**
- * Autocomplete - v1.1.0
- * Copyright 2021 Abel Brencsan
+ * Autocomplete
+ * Copyright 2024 Abel Brencsan
  * Released under the MIT License
  */
-
-var Autocomplete = function(options) {
+const Autocomplete = function(options) {
 
 	'use strict';
 
 	// Test required options
-	if (typeof options.input !== 'object') throw 'Autocomplete "input" option must be an object';
-	if (typeof options.getSuggestions !== 'function') throw 'Autocomplete "getSuggestions" option must be a function';
-	if (typeof options.renderItem !== 'function') throw 'Autocomplete "renderItem" option must be a function';
-	if (typeof options.inputValueOnSelect !== 'function') throw 'Autocomplete "inputValueOnSelect" option must be a function';
-	if (typeof options.inputValueOnHighlight !== 'function') throw 'Autocomplete "inputValueOnHighlight" option must be a function';
+	if (!(options.input instanceof HTMLElement)) {
+		throw 'Autocomplete "input" must be an `HTMLElement`';
+	}
+	if (typeof options.getSuggestions !== 'function') {
+		throw 'Autocomplete "getSuggestions" must be a `function`';
+	}
+	if (typeof options.renderItem !== 'function') {
+		throw 'Autocomplete "renderItem" must be a `function`';
+	}
+	if (typeof options.inputValueOnSelect !== 'function') {
+		throw 'Autocomplete "inputValueOnSelect" must be a `function`';
+	}
+	if (typeof options.inputValueOnHighlight !== 'function') {
+		throw 'Autocomplete "inputValueOnHighlight" must be a `function`';
+	}
 
 	// Default autocomplete instance options
-	var defaults = {
+	let defaults = {
 		input: null,
 		getSuggestions: null,
 		renderItem: null,
@@ -40,13 +49,13 @@ var Autocomplete = function(options) {
 	};
 
 	// Extend autocomplete instance options with defaults
-	for (var key in defaults) {
+	for (let key in defaults) {
 		this[key] = (options.hasOwnProperty(key)) ? options[key] : defaults[key];
 	}
 
 	// Autocomplete instance variables
 	this.suggestions = [];
-	this.suggestionsAreInitialized = false;
+	this.areSuggestionsInitialized = false;
 	this.selectedSuggestionIndex = null;
 	this.highlightedSuggestionIndex = null;
 	this.list = null;
@@ -55,27 +64,29 @@ var Autocomplete = function(options) {
 	this.isInitialized = false;
 	this.isOpened = false;
 	this.timeout = null;
-
 };
 
 Autocomplete.prototype = function () {
 
 	'use strict';
 
-	var autocomplete = {
+	let autocomplete = {
 
 		/**
-		 * Initialize autocomplete. It creates and appends autocomplete to the DOM, adds related events and attributes. (public)
+		 * Initialize autocomplete.
+		 * It creates and appends autocomplete to the DOM and adds related events and attributes.
+		 * 
+		 * @public
 		 */
 		init: function() {
 			if (this.isInitialized) return;
 			autocomplete.createList.call(this);
-			this.input.setAttribute('autocomplete','off');
-			this.input.setAttribute('autocorrect','off');
-			this.input.setAttribute('autocapitalize','off');
 			this.handleEvent = function(event) {
 				autocomplete.handleEvents.call(this, event);
 			};
+			this.input.setAttribute('autocomplete','off');
+			this.input.setAttribute('autocorrect','off');
+			this.input.setAttribute('autocapitalize','off');
 			this.input.addEventListener('blur', this);
 			this.input.addEventListener('focus', this);
 			this.input.addEventListener('keydown', this);
@@ -88,11 +99,13 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Create autocomplete, append it to input's parent element (private)
+		 * Create autocomplete, append it to input's parent element.
+		 * 
+		 * @private
 		 */
 		createList: function() {
 			this.list = document.createElement('ul');
-			for (var i = 0; i < this.listClasses.length; i++) {
+			for (let i = 0; i < this.listClasses.length; i++) {
 				this.list.classList.add(this.listClasses[i]);
 			}
 			this.list.setAttribute('tabindex', -1);
@@ -101,7 +114,9 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Open autocomplete if suggestion items are set. (private)
+		 * Open autocomplete if suggestion items are set.
+		 * 
+		 * @private
 		 */
 		openList: function() {
 			if (!this.suggestions.length) return;
@@ -112,7 +127,9 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Close autocomplete. (private)
+		 * Close autocomplete.
+		 * 
+		 * @private
 		 */
 		closeList: function() {
 			this.isOpened = false;
@@ -122,31 +139,36 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Set scroll position of autocomplete to always see currently highlighted suggestion item. (private)
+		 * Set scroll position of autocomplete to always see currently highlighted suggestion item.
+		 * 
+		 * @private
 		 */
 		setListScrollPosition: function() {
 			if (this.highlightedSuggestionIndex === null) {
 				this.list.scrollTop = 0;
 			}
 			else {
-				if (this.items[this.highlightedSuggestionIndex].offsetTop + this.items[this.highlightedSuggestionIndex].offsetHeight > this.list.scrollTop + this.list.offsetHeight) {
-					this.list.scrollTop = (this.items[this.highlightedSuggestionIndex].offsetTop - this.list.offsetHeight) + this.items[this.highlightedSuggestionIndex].offsetHeight;
+				let item = this.items[this.highlightedSuggestionIndex];
+				if (item.offsetTop + item.offsetHeight > this.list.scrollTop + this.list.offsetHeight) {
+					this.list.scrollTop = (item.offsetTop - this.list.offsetHeight) + item.offsetHeight;
 				}
-				else if (this.items[this.highlightedSuggestionIndex].offsetTop < this.list.scrollTop) {
-					this.list.scrollTop = this.items[this.highlightedSuggestionIndex].offsetTop;
+				else if (item.offsetTop < this.list.scrollTop) {
+					this.list.scrollTop = item.offsetTop;
 				}
 			}
 		},
 
 		/**
-		 * Append suggestion items to autocomplete as a fragment. (private)
+		 * Append suggestion items to autocomplete as a fragment.
+		 * 
+		 * @private
 		 */
 		createItemsFromSuggestions: function() {
-			var fragment = document.createDocumentFragment();
+			let fragment = document.createDocumentFragment();
 			autocomplete.resetItems.call(this);
-			for (var i = 0; i < this.suggestions.length; i++) {
+			for (let i = 0; i < this.suggestions.length; i++) {
 				this.items[i] = document.createElement('li');
-				for (var j = 0; j < this.itemClasses.length; j++) {
+				for (let j = 0; j < this.itemClasses.length; j++) {
 					this.items[i].classList.add(this.itemClasses[j]);
 				}
 				this.items[i].innerHTML = this.renderItem(this.suggestions[i], this.input.value);
@@ -156,7 +178,9 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Remove suggestion items from autcomplete. (private)
+		 * Remove suggestion items from autocomplete.
+		 * 
+		 * @private
 		 */
 		resetItems: function() {
 			this.items = [];
@@ -166,7 +190,10 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Reset suggestions, set selected and highlighted suggestion's index to null. (private)
+		 * Reset suggestions.
+		 * Set selected and highlighted suggestion's index to null.
+		 * 
+		 * @private
 		 */
 		resetSuggestions: function() {
 			this.suggestions = [];
@@ -175,10 +202,12 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Call "getSuggestions" to set suggestions when minimum number of characters are reached.  (private)
+		 * Call "getSuggestions" to set suggestions when minimum number of characters are reached.
+		 * 
+		 * @private
 		 */
 		setSuggestions: function() {
-			this.suggestionsAreInitialized = true;
+			this.areSuggestionsInitialized = true;
 			this.oldInput = null;
 			if (this.input.value.length < this.minChars) {
 				autocomplete.resetSuggestions.call(this);
@@ -187,24 +216,23 @@ Autocomplete.prototype = function () {
 				clearTimeout(this.timeout);
 			}
 			else {
-				var that = this;
 				clearTimeout(this.timeout);
-				this.timeout = setTimeout(function() {
-					autocomplete.resetSuggestions.call(that);
-					that.getSuggestions(that.input.value, function(suggestions) {
-						that.list.scrollTop = 0;
-						if (that.input.value.length >= that.minChars) {
-							that.suggestions = suggestions;
-							if (that.suggestions.length) {
-								if (that.maxSuggestions) that.suggestions = that.suggestions.slice(0, that.maxSuggestions);
-								autocomplete.createItemsFromSuggestions.call(that);
-								if (document.activeElement === that.input) {
-									autocomplete.openList.call(that);
+				this.timeout = setTimeout(() => {
+					autocomplete.resetSuggestions.call(this);
+					this.getSuggestions(this.input.value, (suggestions) => {
+						this.list.scrollTop = 0;
+						if (this.input.value.length >= this.minChars) {
+							this.suggestions = suggestions;
+							if (this.suggestions.length) {
+								if (this.maxSuggestions) this.suggestions = this.suggestions.slice(0, this.maxSuggestions);
+								autocomplete.createItemsFromSuggestions.call(this);
+								if (document.activeElement === this.input) {
+									autocomplete.openList.call(this);
 								}
 							}
 							else {
-								autocomplete.resetItems.call(that);
-								autocomplete.closeList.call(that);
+								autocomplete.resetItems.call(this);
+								autocomplete.closeList.call(this);
 							}
 						}
 					});
@@ -213,15 +241,21 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Select highlighted suggestion item. (private)
+		 * Select highlighted suggestion item.
+		 * 
+		 * @private
 		 */
 		selectHighlightedItem: function() {
-			if (this.highlightedSuggestionIndex !== null) autocomplete.selectItemByIndex.call(this, this.highlightedSuggestionIndex);
+			if (this.highlightedSuggestionIndex !== null) {
+				autocomplete.selectItemByIndex.call(this, this.highlightedSuggestionIndex);
+			}
 		},
 
 		/**
-		 * Select suggestion item by given index. (private)
-		 * @param index integer
+		 * Select suggestion item by given index.
+		 * 
+		 * @private
+		 * @param {number} index
 		 */
 		selectItemByIndex: function(index) {
 			if (typeof this.suggestions[index] == 'undefined') return;
@@ -236,12 +270,14 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Increment highlighted suggestion item's index by one and highlight it. (private)
+		 * Increment highlighted suggestion item's index by one and highlight it.
+		 * 
+		 * @private
 		 */
 		highlightNextItem: function() {
 			if (!this.suggestions.length) return;
 			if (!this.isOpened) autocomplete.openList.call(this);
-			var index;
+			let index;
 			if (this.highlightedSuggestionIndex === null) {
 				index = 0;
 			}
@@ -256,12 +292,14 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Decrement highlighted suggestion item's index by one and highs. (private)
+		 * Decrement highlighted suggestion item's index by one and highlight it.
+		 * 
+		 * @private
 		 */
 		highlightPrevItem: function() {
 			if (!this.suggestions.length) return;
 			if (!this.isOpened) autocomplete.openList.call(this);
-			var index;
+			let index;
 			if (this.highlightedSuggestionIndex === null) {
 				index = this.suggestions.length - 1;
 			}
@@ -276,8 +314,10 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Remove previous and highlight new suggestion item with given index. (private)
-		 * @param index integer|null
+		 * Remove old and highlight new suggestion item at given index.
+		 * 
+		 * @private
+		 * @param {number|null} index
 		 */
 		highlightItemByIndex: function(index) {
 			autocomplete.removeHighlight.call(this);
@@ -291,11 +331,15 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Remove highlight from currently highlighted suggestion item. (private)
-		 * @param index integer|null
+		 * Remove highlight from currently highlighted suggestion item.
+		 * 
+		 * @private
+		 * @param {number|null} index
 		 */
 		removeHighlight: function(index) {
-			if (this.highlightedSuggestionIndex !== null) this.items[this.highlightedSuggestionIndex].classList.remove(this.isHighlightedClass);
+			if (this.highlightedSuggestionIndex !== null) {
+				this.items[this.highlightedSuggestionIndex].classList.remove(this.isHighlightedClass);
+			}
 			this.highlightedSuggestionIndex = null;
 			if (this.oldInput !== null) {
 				this.input.value = this.oldInput;
@@ -304,7 +348,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Handle events. (private)
+		 * Handle events.
 		 * On item mouse down: select suggestion item.
 		 * On item mouse move: highlight suggestion item.
 		 * On list mouse leave: remove highlight from currently highlighted element.
@@ -314,20 +358,22 @@ Autocomplete.prototype = function () {
 		 * On input enter keydown: select highlighted suggestion.
 		 * On input ESC keyup: remove highlight and close list.
 		 * On input every keyup except ESC and arrows: get suggestion.
-		 * @param event object
+		 * 
+		 * @private
+		 * @param {Event} event
 		 */
 		handleEvents: function(event) {
 			switch(event.type) {
 				case 'mousedown':
 					event.preventDefault();
-					for (var i = 0; i < this.items.length; i++) {
+					for (let i = 0; i < this.items.length; i++) {
 						if (this.items[i].contains(event.target) && event.which == 1) {
 							autocomplete.selectItemByIndex.call(this, i);
 						}
 					}
 					break;
 				case 'mousemove':
-					for (var i = 0; i < this.items.length; i++) {
+					for (let i = 0; i < this.items.length; i++) {
 						if (this.items[i].contains(event.target)) {
 							autocomplete.highlightItemByIndex.call(this, i);
 						}
@@ -346,7 +392,7 @@ Autocomplete.prototype = function () {
 					break;
 				case 'focus':
 					if (event.target == this.input) {
-						if (!this.suggestionsAreInitialized) {
+						if (!this.areSuggestionsInitialized) {
 							autocomplete.setSuggestions.call(this);
 						}
 						else {
@@ -390,7 +436,10 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Destroy autocomplete. It removes all related attributes and events, autocomplete from the DOM. (public)
+		 * Destroy autocomplete.
+		 * It removes autocomplete, all related attributes and events,  from the DOM.
+		 * 
+		 * @public
 		 */
 		destroy: function() {
 			if (!this.isInitialized) return;

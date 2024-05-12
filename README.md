@@ -151,5 +151,5 @@ Parameter | Description
 
 ##### Destroy autocomplete 
 
-`destroy()` - Destroy autocomplete. It removes all related attributes and events, autocomplete from the DOM.
+`destroy()` - Destroy autocomplete. It removes autocomplete, all related attributes and events,  from the DOM.
 
