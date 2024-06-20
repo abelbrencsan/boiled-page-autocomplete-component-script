@@ -74,7 +74,6 @@ Autocomplete.prototype = function () {
 
 		/**
 		 * Initialize autocomplete.
-		 * It creates and appends autocomplete to the DOM and adds related events and attributes.
 		 * 
 		 * @public
 		 */
@@ -99,7 +98,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Create autocomplete, append it to input's parent element.
+		 * Create autocomplete.
 		 * 
 		 * @private
 		 */
@@ -139,7 +138,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Set scroll position of autocomplete to always see currently highlighted suggestion item.
+		 * Set scroll position to make highlighted suggestion item visible.
 		 * 
 		 * @private
 		 */
@@ -191,7 +190,6 @@ Autocomplete.prototype = function () {
 
 		/**
 		 * Reset suggestions.
-		 * Set selected and highlighted suggestion's index to null.
 		 * 
 		 * @private
 		 */
@@ -202,7 +200,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Call "getSuggestions" to set suggestions when minimum number of characters are reached.
+		 * Call "getSuggestions" to set suggestions.
 		 * 
 		 * @private
 		 */
@@ -270,7 +268,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Increment highlighted suggestion item's index by one and highlight it.
+		 * Highlight next suggestion item.
 		 * 
 		 * @private
 		 */
@@ -292,7 +290,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Decrement highlighted suggestion item's index by one and highlight it.
+		 * Highlight previous suggestion item.
 		 * 
 		 * @private
 		 */
@@ -314,7 +312,7 @@ Autocomplete.prototype = function () {
 		},
 
 		/**
-		 * Remove old and highlight new suggestion item at given index.
+		 * Highlight suggestion item at given index.
 		 * 
 		 * @private
 		 * @param {number|null} index
@@ -437,7 +435,6 @@ Autocomplete.prototype = function () {
 
 		/**
 		 * Destroy autocomplete.
-		 * It removes autocomplete, all related attributes and events,  from the DOM.
 		 * 
 		 * @public
 		 */

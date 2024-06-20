@@ -147,9 +147,9 @@ Parameter | Description
 
 ##### Initialize autocomplete
 
-`init()` - Initialize autocomplete. It creates and appends autocomplete to the DOM, adds related events and attributes.
+`init()` - Initialize autocomplete.
 
 ##### Destroy autocomplete 
 
-`destroy()` - Destroy autocomplete. It removes autocomplete, all related attributes and events,  from the DOM.
+`destroy()` - Destroy autocomplete.
 
